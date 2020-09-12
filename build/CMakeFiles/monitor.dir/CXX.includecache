@@ -30,6 +30,18 @@ process.h
 processor.h
 ../include/processor.h
 
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.cpp
+dirent.h
+-
+unistd.h
+-
+string
+-
+vector
+-
+linux_parser.h
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.h
+
 /home/philipp/Code/cpp/ucy_cpp_system_monitor/src/system.cpp
 unistd.h
 -
