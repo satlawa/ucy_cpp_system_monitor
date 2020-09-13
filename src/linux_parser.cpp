@@ -77,6 +77,7 @@ float LinuxParser::MemoryUtilization() {
     linestream >> memTemp >> memTotal;
 
     std::getline(stream, line);
+    std::getline(stream, line);
     linestream.str(line);
     linestream >> memTemp >> memFree;
   }
@@ -121,10 +122,9 @@ int LinuxParser::TotalProcesses() {
   if (stream.is_open()) {
     for (string line; std::getline(stream, line);) {
       std::istringstream linestream(line);
-
-      for (string type, num; linestream >> type >> num;) {
+      for (string type, val; linestream >> type >> val;) {
         if (type == "processes") {
-          processesTotal = num;
+          processesTotal = val;
         }
       }
     }
@@ -140,10 +140,9 @@ int LinuxParser::RunningProcesses() {
   if (stream.is_open()) {
     for (string line; std::getline(stream, line);) {
       std::istringstream linestream(line);
-
-      for (string type, num; linestream >> type >> num;) {
+      for (string type, val; linestream >> type >> val;) {
         if (type == "procs_running") {
-          processesRunning = num;
+          processesRunning = val;
         }
       }
     }
@@ -161,7 +160,22 @@ string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Uid(int pid) {
+  string uid = "x";
+  string line;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatusFilename);
+  if (stream.is_open()) {
+    for (string line; std::getline(stream, line);) {
+      std::istringstream linestream(line);
+      for (string type, val; linestream >> type >> val;) {
+        if (type == "Uid:") {
+          uid = val;
+        }
+      }
+    }
+  }
+  return uid;
+}
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function

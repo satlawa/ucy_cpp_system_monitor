@@ -6,13 +6,17 @@
 
 #IncludeRegexTransform: 
 
-../include/linux_parser.h
-fstream
--
-regex
--
+../include/format.h
 string
 -
+
+../include/ncurses_display.h
+curses.h
+-
+process.h
+../include/process.h
+system.h
+../include/system.h
 
 ../include/process.h
 string
@@ -30,35 +34,27 @@ process.h
 processor.h
 ../include/processor.h
 
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.cpp
-dirent.h
--
-unistd.h
--
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/format.cpp
 string
 -
-vector
--
-linux_parser.h
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.h
+format.h
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/format.h
 
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/system.cpp
-unistd.h
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/ncurses_display.cpp
+curses.h
 -
-cstddef
--
-set
+chrono
 -
 string
 -
+thread
+-
 vector
 -
-process.h
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/process.h
-processor.h
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/processor.h
+format.h
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/format.h
+ncurses_display.h
+/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/ncurses_display.h
 system.h
 /home/philipp/Code/cpp/ucy_cpp_system_monitor/src/system.h
-linux_parser.h
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.h
 
