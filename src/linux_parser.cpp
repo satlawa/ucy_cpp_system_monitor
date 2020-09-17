@@ -104,13 +104,18 @@ long LinuxParser::Jiffies() { return 0; }
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid) {
-  /*string line;
+  string line, val;
+  long utime, stime, cutime, cstime;
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
-    linestream >> cpu >> user >> nice;*/
-  return 0;
+    for(int i = 0; i < 14; i++) {
+      linestream >> val;
+    }
+    linestream >> utime >> stime >> cutime >> cstime;
+  }
+  return utime + stime + cutime + cstime;
 }
 
 // TODO: Read and return the number of active jiffies for the system
@@ -120,43 +125,27 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() {
-  vector<string> cpuInfo;
+vector<long> LinuxParser::CpuUtilization() {
+  vector<long> cpuInfo;
   //string cpu, user, nice, system, idle, ioWait, irq,
   //    softIrq, steal, guest, guestNice;
   string val;
   string line;
+  long valNum;
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
     for(int i = 0; i < 11; i++) {
       linestream >> val;
-      cpuInfo.push_back(val);
+      // convert string to long
+      try {
+        valNum = stol(val);
+      } catch (const std::invalid_argument& arg) {
+        valNum = 0;
+      }
+      cpuInfo.push_back(valNum);
     }
-    /*
-    linestream >> cpu >> user >> nice >> system >> idle >> ioWait >> irq >>
-      softIrq >> steal >> guest >> guestNice;
-      cpuInfo.push_back(user);
-      cpuInfo.push_back(nice);
-      cpuInfo.push_back(system);
-      cpuInfo.push_back(idle);
-      cpuInfo.push_back(ioWait);
-      cpuInfo.push_back(irq);
-      cpuInfo.push_back(softIrq);
-      cpuInfo.push_back(steal);
-      cpuInfo.push_back(guest);
-      cpuInfo.push_back(guestNice);
-    //*
-    for (string line; std::getline(stream, line);) {
-      std::istringstream linestream(line);
-      for (string cpu, user, nice, system, idle, ioWait, irq,
-          softIrq, steal, guest, guestNice;
-        linestream >> cpu >> user >> nice >> system >> idle >> ioWait >> irq >>
-          softIrq >> steal >> guest >> guestNice;) {
-
-        }
-      }*/
   }
   return cpuInfo;
 }
@@ -269,4 +258,22 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) {
+  long upTime;
+  string line, val;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    for (string line; std::getline(stream, line);) {
+      std::istringstream linestream(line);
+      for (int i = 0; i < 22; i++) {
+        linestream >> val;
+      }
+      try {
+        upTime = stol(val) / sysconf(_SC_CLK_TCK);
+      } catch (const std::invalid_argument& arg) {
+        upTime = 0;
+      }
+    }
+  }
+  return upTime;
+}

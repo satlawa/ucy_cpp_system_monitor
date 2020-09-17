@@ -11,10 +11,8 @@ class Processor {
 
   // TODO: Declare any necessary private members
  private:
-   float prevTotal_;
-   float prevIdle_;
-
-   std::vector<long> convertToLong(std::vector<std::string> values);
+   float oldTotal_;
+   float oldIdle_;
 };
 
 #endif

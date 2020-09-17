@@ -7,39 +7,25 @@
 using std::string;
 using std::vector;
 
-Processor::Processor() : prevTotal_(0.0), prevIdle_(0.0) {};
+Processor::Processor() : oldTotal_(0.0), oldIdle_(0.0) {};
 
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
-  vector<long> cpuInfo = convertToLong(LinuxParser::CpuUtilization());
 
-  float total = cpuInfo[1] + cpuInfo[2] +
-      cpuInfo[3] + cpuInfo[4] +
-      cpuInfo[5] + cpuInfo[6] +
-      cpuInfo[7] + cpuInfo[8];
+  vector<long> cpuInfo = LinuxParser::CpuUtilization();
 
-  float idle = cpuInfo[4] + cpuInfo[5];
+  float newTotal = cpuInfo[1] + cpuInfo[2] + cpuInfo[3] + cpuInfo[4] +
+      cpuInfo[5] + cpuInfo[6] + cpuInfo[7] + cpuInfo[8];
 
-  float totalDiff = total - prevTotal_;
-  float idleDiff = idle - prevIdle_;
+  float newIdle = cpuInfo[4] + cpuInfo[5];
+
+  float totalDiff = newTotal - oldTotal_;
+  float idleDiff = newIdle - oldIdle_;
 
   float percentage = (totalDiff - idleDiff) / totalDiff;
 
-  prevTotal_ = total;
-  prevIdle_ = idle;
+  oldTotal_ = newTotal;
+  oldIdle_ = newIdle;
 
   return percentage;
-}
-
-vector<long> Processor::convertToLong(vector<string> values) {
-  vector<long> convertedValues{};
-
-  for (int it = 0; it < (int)values.size(); it++) {
-    try {
-      convertedValues.push_back(std::stol(values[it]));
-    } catch (const std::invalid_argument& arg) {
-      convertedValues.push_back((long)0);
-    }
-  }
-  return convertedValues;
 }

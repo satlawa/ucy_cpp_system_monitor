@@ -14,12 +14,6 @@ regex
 string
 -
 
-../include/processor.h
-vector
--
-string
--
-
 /home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.cpp
 dirent.h
 -
@@ -29,16 +23,6 @@ string
 -
 vector
 -
-linux_parser.h
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.h
-
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/processor.cpp
-string
--
-vector
--
-processor.h
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/src/processor.h
 linux_parser.h
 /home/philipp/Code/cpp/ucy_cpp_system_monitor/src/linux_parser.h
 
