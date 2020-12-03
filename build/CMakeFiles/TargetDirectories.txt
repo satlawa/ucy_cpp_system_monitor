@@ -1,3 +1,0 @@
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/build/CMakeFiles/rebuild_cache.dir
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/build/CMakeFiles/edit_cache.dir
-/home/philipp/Code/cpp/ucy_cpp_system_monitor/build/CMakeFiles/monitor.dir
