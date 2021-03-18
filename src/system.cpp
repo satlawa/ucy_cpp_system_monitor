@@ -21,12 +21,14 @@ Processor& System::Cpu() { return cpu_; }
 vector<Process>& System::Processes() {
   // get all pids on the system
   vector<int> pids = LinuxParser::Pids();
+  processes_.clear();
+  
   for (int pid : pids) {
     // add all processes with a pid on the system
     processes_.push_back(Process(pid));
   }
   // sort the processes
-  std::sort(processes_.begin(), processes_.end());
+  std::sort(processes_.rbegin(), processes_.rend());
   return processes_;
 }
 

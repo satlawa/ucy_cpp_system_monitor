@@ -11,52 +11,47 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int pid) : pid_(pid), command_(LinuxParser::Command(pid)),
-      user_(LinuxParser::User(pid)){
-        cpu_ = Process::CalcCpuUtilization();
-      };
+Process::Process(int pid)
+  : pid_(pid),
+    command_(LinuxParser::Command(pid)),
+    ram_(LinuxParser::Ram(pid)),
+    uptime_(LinuxParser::UpTime(pid)),
+    user_(LinuxParser::User(pid)) {
 
-// TODO: Return this process's ID
-int Process::Pid() { return pid_; }
+  vector<long> cpuInfo_pid = LinuxParser::ActiveJiffies(pid);
+  long utime = cpuInfo_pid[0];
+  long stime = cpuInfo_pid[1];
+  long cutime = cpuInfo_pid[2];
+  long cstime = cpuInfo_pid[3];
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return cpu_; }
+  long total_time = utime + stime + cutime + cstime;
 
-// TODO: Return the command that generated this process
-string Process::Command() { return LinuxParser::Command(pid_); }
+  long seconds = LinuxParser::UpTime() - uptime_;
 
-// TODO: Return this process's memory utilization
-string Process::Ram() { return LinuxParser::Ram(pid_); }
-
-// TODO: Return the user (name) that generated this process
-string Process::User() { return LinuxParser::User(pid_); }
-
-// TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
-
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const {
-  return cpu_ < a.cpu_;
+  if (seconds != 0) {
+    cpu_ = float(total_time / sysconf(_SC_CLK_TCK)) / float(seconds);
+  } else {
+    cpu_ = 0;
+  }
 }
+// Return this process's ID
+int Process::Pid() const { return pid_; }
 
-float Process::CalcCpuUtilization() {
+// Return this process's CPU utilization
+float Process::CpuUtilization() const { return cpu_; }
 
-  vector<long> cpuInfo_pid = LinuxParser::ActiveJiffies(pid_);
-  // total time spent of the process and its child processes
-  float totalLoad_pid = cpuInfo_pid[0] + cpuInfo_pid[1] + cpuInfo_pid[2] + cpuInfo_pid[3];
+// Return the command that generated this process
+string Process::Command() const { return command_; }
 
-  vector<long> cpuInfo = LinuxParser::CpuUtilization();
-  // total time spent working of all the processes
-  float totalLoad = cpuInfo[1] + cpuInfo[2] + cpuInfo[3] + cpuInfo[4] +
-      cpuInfo[5] + cpuInfo[6] + cpuInfo[7] + cpuInfo[8];
-  // total time spent idle of all the processes
-  float totalIdle = cpuInfo[4] + cpuInfo[5];
-  // total CPU utilistion
-  float cpuUtilTot = (totalLoad-totalIdle)/totalLoad;
-  // calculate CPU utilistion of the process by multiplying the total
-  // CPU utilistion by the portion the process has on the total working processes
-  float percentage = cpuUtilTot * (totalLoad_pid/totalLoad);
+// Return this process's memory utilization
+string Process::Ram() const { return ram_; }
 
-  return percentage;
+// Return the user (name) that generated this process
+string Process::User() const { return user_; }
+
+//  Return the age of this process (in seconds)
+long int Process::UpTime() const { return uptime_; }
+// Overload the "less than" comparison operator for Process objects
+bool Process::operator<(Process const& a) const {
+  return CpuUtilization() < a.CpuUtilization();
 }
