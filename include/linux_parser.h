@@ -43,7 +43,7 @@ enum CPUStates {
 std::vector<long> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
-std::vector<long> ActiveJiffies(int pid);
+std::vector<float> ActiveJiffies(int pid);
 long IdleJiffies();
 
 // Processes

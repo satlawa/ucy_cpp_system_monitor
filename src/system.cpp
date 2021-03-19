@@ -22,7 +22,7 @@ vector<Process>& System::Processes() {
   // get all pids on the system
   vector<int> pids = LinuxParser::Pids();
   processes_.clear();
-  
+
   for (int pid : pids) {
     // add all processes with a pid on the system
     processes_.push_back(Process(pid));

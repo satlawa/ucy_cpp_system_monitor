@@ -18,18 +18,19 @@ Process::Process(int pid)
     uptime_(LinuxParser::UpTime(pid)),
     user_(LinuxParser::User(pid)) {
 
-  vector<long> cpuInfo_pid = LinuxParser::ActiveJiffies(pid);
-  long utime = cpuInfo_pid[0];
-  long stime = cpuInfo_pid[1];
-  long cutime = cpuInfo_pid[2];
-  long cstime = cpuInfo_pid[3];
+  vector<float> cpuInfo_pid = LinuxParser::ActiveJiffies(pid);
+  float utime = cpuInfo_pid[0];
+  float stime = cpuInfo_pid[1];
+  float cutime = cpuInfo_pid[2];
+  float cstime = cpuInfo_pid[3];
+  float start_time = cpuInfo_pid[4];
 
-  long total_time = utime + stime + cutime + cstime;
+  float total_time = utime + stime + cutime + cstime;
 
-  long seconds = LinuxParser::UpTime() - uptime_;
+  float seconds = LinuxParser::UpTime() - start_time;
 
   if (seconds != 0) {
-    cpu_ = float(total_time / sysconf(_SC_CLK_TCK)) / float(seconds);
+    cpu_ = total_time / seconds;
   } else {
     cpu_ = 0;
   }
